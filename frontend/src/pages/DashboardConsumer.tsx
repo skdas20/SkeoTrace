@@ -157,6 +157,67 @@ export const DashboardConsumer: React.FC = () => {
               </CardContent>
             </Card>
 
+            {/* QR Code Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Package className="h-5 w-5" />
+                  <span>QR Code</span>
+                </CardTitle>
+                <CardDescription>
+                  Share this QR code for quick access to this product's trace information
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col sm:flex-row items-center gap-6">
+                  <div className="flex-shrink-0">
+                    <img 
+                      src={`${(import.meta as any).env?.VITE_API_URL || 'http://localhost:5000'}/public/qrcode/${traceData.batch.batchId}`}
+                      alt={`QR Code for batch ${traceData.batch.batchId}`}
+                      className="w-32 h-32 border border-gray-200 rounded-lg"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        target.nextElementSibling?.classList.remove('hidden');
+                      }}
+                    />
+                    <div className="hidden w-32 h-32 border border-gray-200 rounded-lg flex items-center justify-center bg-gray-50">
+                      <span className="text-sm text-gray-500">QR code unavailable</span>
+                    </div>
+                  </div>
+                  <div className="flex-1 text-center sm:text-left">
+                    <h3 className="font-medium text-lg mb-2">Scan to Trace</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Anyone can scan this QR code to view the complete journey and authenticity 
+                      verification of this product batch.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          const qrUrl = `${(import.meta as any).env?.VITE_API_URL || 'http://localhost:5000'}/public/qrcode/${traceData.batch.batchId}`;
+                          window.open(qrUrl, '_blank');
+                        }}
+                      >
+                        View Full Size
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          const traceUrl = `${window.location.origin}/trace/${traceData.batch.batchId}`;
+                          navigator.clipboard.writeText(traceUrl);
+                        }}
+                      >
+                        Copy Trace Link
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Blockchain Verification */}
             <Card>
               <CardHeader>

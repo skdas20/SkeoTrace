@@ -10,11 +10,33 @@ const app = express();
 
 // Security middleware
 app.use(helmet());
+
+// CORS configuration to allow both web and mobile app requests
+const allowedOrigins = [
+  'https://skeo-trace.vercel.app', // Web frontend
+  'http://localhost:3000', // Local development
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || process.env.NODE_ENV === 'production' 
-    ? 'https://skeo-trace.vercel.app' 
-    : 'http://localhost:3000',
-  credentials: true
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Allow specific origins
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    // For production, be more permissive for mobile apps
+    if (process.env.NODE_ENV === 'production') {
+      return callback(null, true); // Allow all origins for mobile apps
+    }
+    
+    callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Logging middleware

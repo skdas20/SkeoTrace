@@ -1,0 +1,22 @@
+{
+  "name": "organic-food-traceability",
+  "version": "1.0.0",
+  "description": "Blockchain-based Organic Food Traceability System",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm start",
+    "build": "cd frontend && npm run build",
+    "install-server": "cd backend && npm install",
+    "install-client": "cd frontend && npm install",
+    "install-all": "npm run install-server && npm run install-client",
+    "seed": "cd backend && npm run seed"
+  },
+  "keywords": ["blockchain", "traceability", "organic-food", "supply-chain"],
+  "author": "DEVNEST Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

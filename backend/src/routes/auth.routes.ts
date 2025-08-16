@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { User, Role } from '../models/User';
 import { env } from '../config/env';
+import { requireAuth } from '../middleware/auth';
 
 const router = express.Router();
 
@@ -111,6 +112,27 @@ router.post('/login', async (req, res, next) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors[0].message });
     }
+    next(error);
+  }
+});
+
+// Get current user profile
+router.get('/profile', requireAuth, async (req: any, res: any, next: any) => {
+  try {
+    const user = await User.findById(req.user._id).select('-passwordHash');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
+  } catch (error) {
     next(error);
   }
 });

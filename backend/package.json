@@ -2,13 +2,14 @@
   "name": "skeotrace-backend",
   "version": "1.0.0",
   "description": "SkeoTrace - Transparent Farm-to-Fork Traceability API",
-  "main": "dist/server.js",
+  "main": "dist/src/server.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/src/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "seed": "ts-node scripts/seed.ts",
-    "test": "jest"
+    "test": "jest",
+    "serve": "node dist/src/server.js"
   },
   "dependencies": {
     "axios": "^1.11.0",

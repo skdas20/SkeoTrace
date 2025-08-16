@@ -1,7 +1,7 @@
 {
-  "name": "organic-traceability-frontend",
+  "name": "skeotrace-frontend",
   "version": "1.0.0",
-  "description": "React Vite TypeScript frontend for Organic Food Traceability System",
+  "description": "SkeoTrace - React Frontend for Transparent Farm-to-Fork Traceability",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,15 +10,15 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.0.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "lucide-react": "^0.268.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
-    "zustand": "^4.4.1",
-    "lucide-react": "^0.268.0",
-    "clsx": "^2.0.0",
     "tailwind-merge": "^1.14.0",
-    "@radix-ui/react-slot": "^1.0.2",
-    "class-variance-authority": "^0.7.0"
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
@@ -27,6 +27,7 @@
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
     "autoprefixer": "^10.4.14",
+    "cpx2": "^8.0.0",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",

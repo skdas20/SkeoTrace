@@ -1,7 +1,7 @@
 {
-  "name": "organic-food-traceability",
+  "name": "skeotrace",
   "version": "1.0.0",
-  "description": "Blockchain-based Organic Food Traceability System",
+  "description": "SkeoTrace - Transparent Farm-to-Fork Food Traceability System",
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",

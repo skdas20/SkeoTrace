@@ -1,10 +1,10 @@
-# TraceChain - Organic Food Traceability System
+# SkeoTrace - Transparent Farm-to-Fork Traceability
 
-A comprehensive blockchain-based organic food traceability system that ensures transparency, authenticity, and trust throughout the entire supply chain from farm to consumer.
+A comprehensive food traceability system that ensures transparency, authenticity, and trust throughout the entire supply chain from farm to consumer.
 
 ## 🌱 Overview
 
-TraceChain leverages blockchain technology to create an immutable record of organic food products' journey through the supply chain, enabling consumers to verify the authenticity and origin of their food with a simple QR code scan.
+SkeoTrace leverages blockchain technology to create an immutable record of food products' journey through the supply chain, enabling consumers to verify the authenticity and origin of their food with a simple QR code scan.
 
 ## ✨ Features
 
@@ -12,8 +12,20 @@ TraceChain leverages blockchain technology to create an immutable record of orga
 - **🔗 Blockchain Integration**: Immutable supply chain event logging
 - **📱 QR Code System**: Easy product verification for consumers
 - **📋 Certificate Management**: Digital organic certification handling
-- **👥 Multi-Role Support**: Farmers, Processors, Certifiers, Distributors, Retailers, Consumers, Admins
+- **👥 Multi-Role Support**: Producers, Retailers, Consumers, Admins
 - **📊 Real-time Tracking**: Live batch status updates across the supply chain
+
+## 🌐 Live Demo
+
+- **Frontend**: https://skeo-trace.vercel.app/
+- **Backend API**: https://skeotrace-backend.onrender.com
+- **API Health**: https://skeotrace-backend.onrender.com/api/health
+
+### Demo Credentials
+- **Producer**: `producer@demo.com` / `password123`
+- **Retailer**: `retailer@demo.com` / `password123`
+- **Consumer**: `consumer@demo.com` / `password123`
+- **Admin**: `admin@demo.com` / `password123`
 
 ### Key Benefits
 - **🛡️ Trust & Transparency**: Immutable blockchain records

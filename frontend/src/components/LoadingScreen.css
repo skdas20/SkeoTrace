@@ -41,7 +41,7 @@
   flex: 0 0 auto;
   stroke-width: 1.5;
   width: clamp(40px, 8vw, 110px);
-  height: clamp(40px, 8vw, 110px);
+  height: clamp(38px, 6vw, 100px);
 }
 
 .loading-wordmark {

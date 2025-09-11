@@ -1,18 +1,20 @@
+// Block model: application-level blockchain block stored in MongoDB
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IBlock extends Document {
   _id: mongoose.Types.ObjectId;
-  index: number;
-  timestamp: Date;
-  prevHash: string;
-  merkleRoot: string;
-  hash: string;
-  signer: string;
-  eventIds: mongoose.Types.ObjectId[];
+  index: number; // sequential block index
+  timestamp: Date; // block creation time
+  prevHash: string; // previous block hash (or 'GENESIS')
+  merkleRoot: string; // merkle root of included events
+  hash: string; // SHA-256 hash of block header fields
+  signer: string; // signer label (PoA by default)
+  eventIds: mongoose.Types.ObjectId[]; // linked events in this block
   createdAt: Date;
   updatedAt: Date;
 }
 
+// Block schema (indexes help admin queries and verification)
 const blockSchema = new Schema<IBlock>({
   index: {
     type: Number,
@@ -48,6 +50,7 @@ const blockSchema = new Schema<IBlock>({
   timestamps: true
 });
 
+// Indexes to accelerate block lookups by index or hash
 blockSchema.index({ index: 1 });
 blockSchema.index({ hash: 1 });
 

@@ -1,9 +1,11 @@
+// BatchService: high level domain logic to manage batches and emit events
 import { Batch, IBatch, BatchStatus } from '../models/Batch';
 import { Event, EventType } from '../models/Event';
 import { User } from '../models/User';
 import { BlockchainService } from './blockchain';
 
 export class BatchService {
+  // Create a new batch and emit a BATCH_CREATED event + block
   static async createBatch(data: {
     batchId: string;
     productType: string;
@@ -11,13 +13,13 @@ export class BatchService {
     harvestDate?: Date;
     actorUserId: string;
   }): Promise<IBatch> {
-    // Check if batch already exists
+    // Ensure uniqueness of batchId
     const existingBatch = await Batch.findOne({ batchId: data.batchId });
     if (existingBatch) {
       throw new Error('Batch with this ID already exists');
     }
 
-    // Create batch
+    // Persist batch document with initial state and owner
     const batch = new Batch({
       batchId: data.batchId,
       productType: data.productType,
@@ -30,7 +32,7 @@ export class BatchService {
 
     await batch.save();
 
-    // Create event
+    // Create domain event capturing the batch creation
     const event = new Event({
       batchId: data.batchId,
       type: 'BATCH_CREATED',
@@ -44,16 +46,17 @@ export class BatchService {
 
     await event.save();
 
-    // Update batch with event
+    // Link event to batch and persist
     batch.eventIds.push(event._id);
     await batch.save();
 
-    // Create block
+    // Create blockchain-style block containing this event
     await BlockchainService.createBlock([event._id.toString()]);
 
     return batch;
   }
 
+  // Update batch metadata and optionally emit events + block(s)
   static async updateBatch(
     batchId: string,
     updates: {
@@ -67,41 +70,43 @@ export class BatchService {
       throw new Error('Batch not found');
     }
 
-    // Check ownership
+    // Enforce that only current owner can change batch
     if (batch.currentOwnerUserId?.toString() !== actorUserId) {
       throw new Error('Only the current owner can update the batch');
     }
 
     const events: any[] = [];
 
+    // If harvestDate updated, persist and emit HARVEST_UPDATED event
     if (updates.harvestDate) {
       batch.harvestDate = updates.harvestDate;
-      
+
       const event = new Event({
         batchId,
         type: 'HARVEST_UPDATED',
         payload: { harvestDate: updates.harvestDate },
         actorUserId
       });
-      
+
       await event.save();
       events.push(event);
       batch.eventIds.push(event._id);
     }
 
+    // If certification uploaded, update batch and emit CERT_UPLOAD event
     if (updates.certification) {
       batch.certification = updates.certification;
       if (updates.certification.status === 'APPROVED') {
         batch.status = 'CERTIFIED';
       }
-      
+
       const event = new Event({
         batchId,
         type: 'CERT_UPLOAD',
         payload: { certification: updates.certification },
         actorUserId
       });
-      
+
       await event.save();
       events.push(event);
       batch.eventIds.push(event._id);
@@ -109,7 +114,7 @@ export class BatchService {
 
     await batch.save();
 
-    // Create block if there are events
+    // If any events were produced, create a new block containing them
     if (events.length > 0) {
       await BlockchainService.createBlock(events.map(e => e._id.toString()));
     }
@@ -117,6 +122,7 @@ export class BatchService {
     return batch;
   }
 
+  // Transfer batch to retailer, create TRANSFER event + block
   static async transferBatch(
     batchId: string,
     toRetailerUserId: string,
@@ -128,21 +134,22 @@ export class BatchService {
       throw new Error('Batch not found');
     }
 
-    // Check ownership
+    // Only current owner may transfer
     if (batch.currentOwnerUserId?.toString() !== actorUserId) {
       throw new Error('Only the current owner can transfer the batch');
     }
 
-    // Verify retailer exists
+    // Validate target retailer exists and has correct role
     const retailer = await User.findById(toRetailerUserId);
     if (!retailer || retailer.role !== 'RETAILER') {
       throw new Error('Invalid retailer');
     }
 
-    // Update batch
+    // Update batch owner and status
     batch.currentOwnerUserId = retailer._id;
     batch.status = 'IN_TRANSIT';
 
+    // Emit TRANSFER event recording recipient and note
     const event = new Event({
       batchId,
       type: 'TRANSFER',
@@ -158,12 +165,13 @@ export class BatchService {
     batch.eventIds.push(event._id);
     await batch.save();
 
-    // Create block
+    // Create a block for the transfer event
     await BlockchainService.createBlock([event._id.toString()]);
 
     return batch;
   }
 
+  // Update batch status (for retailers) and emit corresponding event + block
   static async updateBatchStatus(
     batchId: string,
     status: BatchStatus,
@@ -176,18 +184,19 @@ export class BatchService {
       throw new Error('Batch not found');
     }
 
-    // Check ownership for retailers
+    // Ownership check for retailers
     if (batch.currentOwnerUserId?.toString() !== actorUserId) {
       throw new Error('Only the current owner can update the batch status');
     }
 
-    // Business rules
+    // Business rule: cannot sell before receiving/storing
     if (eventType === 'SELL' && !['RECEIVED', 'STORED'].includes(batch.status)) {
       throw new Error('Can only sell after receiving or storing');
     }
 
     batch.status = status;
 
+    // Emit event for status change
     const event = new Event({
       batchId,
       type: eventType,
@@ -199,7 +208,7 @@ export class BatchService {
     batch.eventIds.push(event._id);
     await batch.save();
 
-    // Create block
+    // Create block for the new event
     await BlockchainService.createBlock([event._id.toString()]);
 
     return batch;

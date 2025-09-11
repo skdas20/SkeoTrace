@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { requireAuth, requireRole } from '../middleware/auth';
 import { BatchService } from '../services/batch';
 import { Batch } from '../models/Batch';
+import { User } from '../models/User';
 
 const router = express.Router();
 
@@ -23,12 +24,16 @@ const updateBatchSchema = z.object({
   }).optional()
 });
 
+// Accept either a retailer user id or retailer email (frontend currently sends email)
 const transferBatchSchema = z.object({
-  toRetailerUserId: z.string().min(1),
+  toRetailerUserId: z.string().min(1).optional(),
+  toRetailerEmail: z.string().email().optional(),
   note: z.string().optional()
+}).refine((val) => !!(val.toRetailerUserId || val.toRetailerEmail), {
+  message: 'Either toRetailerUserId or toRetailerEmail is required'
 });
 
-// Create batch
+// POST /api/producer/batches - create a new batch (producer-only)
 router.post('/batches', requireAuth, requireRole('PRODUCER'), async (req: any, res: any, next: any) => {
   try {
     const data = createBatchSchema.parse(req.body);
@@ -62,7 +67,7 @@ router.post('/batches', requireAuth, requireRole('PRODUCER'), async (req: any, r
   }
 });
 
-// Update batch
+// PATCH /api/producer/batches/:id - update an existing batch
 router.patch('/batches/:id', requireAuth, requireRole('PRODUCER'), async (req: any, res: any, next: any) => {
   try {
     const data = updateBatchSchema.parse(req.body);
@@ -90,15 +95,23 @@ router.patch('/batches/:id', requireAuth, requireRole('PRODUCER'), async (req: a
   }
 });
 
-// Transfer batch
+// POST /api/producer/batches/:id/transfer - transfer a batch to a retailer
 router.post('/batches/:id/transfer', requireAuth, requireRole('PRODUCER'), async (req: any, res: any, next: any) => {
   try {
     const data = transferBatchSchema.parse(req.body);
     const batchId = req.params.id;
-    
+
+    // Resolve retailer user id if frontend supplied email instead
+    let toRetailerUserId = data.toRetailerUserId as string | undefined;
+    if (!toRetailerUserId && data.toRetailerEmail) {
+      const retailer = await User.findOne({ email: data.toRetailerEmail });
+      if (!retailer) return res.status(400).json({ error: 'Retailer not found for provided email' });
+      toRetailerUserId = retailer._id.toString();
+    }
+
     const batch = await BatchService.transferBatch(
       batchId,
-      data.toRetailerUserId,
+      toRetailerUserId!,
       req.user._id.toString(),
       data.note
     );
@@ -115,7 +128,7 @@ router.post('/batches/:id/transfer', requireAuth, requireRole('PRODUCER'), async
   }
 });
 
-// Get producer's batches
+// GET /api/producer/batches - retrieve all batches for the producer
 router.get('/batches', requireAuth, requireRole('PRODUCER'), async (req: any, res: any, next: any) => {
   try {
     const batches = await Batch.find({ currentOwnerUserId: req.user._id })

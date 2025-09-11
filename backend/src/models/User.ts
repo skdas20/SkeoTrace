@@ -1,5 +1,7 @@
+// User model: stores user credentials and role for RBAC
 import mongoose, { Document, Schema } from 'mongoose';
 
+// Role enum used throughout middleware and routes
 export type Role = 'PRODUCER' | 'RETAILER' | 'CONSUMER' | 'ADMIN';
 
 export interface IUser extends Document {
@@ -12,6 +14,7 @@ export interface IUser extends Document {
   updatedAt: Date;
 }
 
+// Mongoose schema for user credentials and role
 const userSchema = new Schema<IUser>({
   name: {
     type: String,
@@ -38,6 +41,7 @@ const userSchema = new Schema<IUser>({
   timestamps: true
 });
 
+// Index on email for quick lookup and uniqueness
 userSchema.index({ email: 1 });
 
 export const User = mongoose.model<IUser>('User', userSchema);

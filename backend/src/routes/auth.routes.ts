@@ -1,3 +1,4 @@
+// Auth routes: registration, login and profile
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -20,26 +21,25 @@ const loginSchema = z.object({
   password: z.string().min(1)
 });
 
-// Register
+// POST /api/auth/register - register a new user
 router.post('/register', async (req, res, next) => {
   try {
     const data = registerSchema.parse(req.body);
-    
-    // Check if user exists
+
+    // Prevent duplicate users
     const existingUser = await User.findOne({ email: data.email });
     if (existingUser) {
       return res.status(400).json({ error: 'User already exists' });
     }
 
-    // Only allow CONSUMER self-registration in production
+    // Production policy: only allow consumer self-registration
     if (env.NODE_ENV === 'production' && data.role !== 'CONSUMER') {
       return res.status(403).json({ error: 'Only consumers can self-register' });
     }
 
-    // Hash password
+    // Hash and persist password
     const passwordHash = await bcrypt.hash(data.password, 12);
 
-    // Create user
     const user = new User({
       name: data.name,
       email: data.email,
@@ -49,7 +49,7 @@ router.post('/register', async (req, res, next) => {
 
     await user.save();
 
-    // Generate token
+    // Issue JWT for immediate authentication
     const token = jwt.sign(
       { userId: user._id.toString(), role: user.role },
       env.JWT_SECRET,
@@ -74,24 +74,22 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
-// Login
+// POST /api/auth/login - authenticate with email/password
 router.post('/login', async (req, res, next) => {
   try {
     const data = loginSchema.parse(req.body);
-    
-    // Find user
+
+    // Lookup user and verify password
     const user = await User.findOne({ email: data.email });
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Check password
     const isValidPassword = await bcrypt.compare(data.password, user.passwordHash);
     if (!isValidPassword) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Generate token
     const token = jwt.sign(
       { userId: user._id.toString(), role: user.role },
       env.JWT_SECRET,
@@ -116,7 +114,7 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
-// Get current user profile
+// GET /api/auth/profile - return current user's profile (requires auth)
 router.get('/profile', requireAuth, async (req: any, res: any, next: any) => {
   try {
     const user = await User.findById(req.user._id).select('-passwordHash');

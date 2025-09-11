@@ -1,3 +1,4 @@
+// Express app setup with security, CORS, logging, routes and error handling
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -5,33 +6,33 @@ import morgan from 'morgan';
 import routes from './routes';
 import { errorHandler } from './middleware/error';
 
-// Create Express app
+// Create Express app instance
 const app = express();
 
-// Security middleware
+// Apply basic security headers
 app.use(helmet());
 
-// CORS configuration to allow both web and mobile app requests
+// Configure CORS with allowed origins and fallback behavior
 const allowedOrigins = [
-  'https://skeo-trace.vercel.app', // Web frontend
-  'http://localhost:3000', // Local development
+  'https://skeo-trace.vercel.app', // production frontend
+  'http://localhost:3000', // local dev frontend
 ];
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
+    // Allow requests that lack origin header (tools, mobile apps)
     if (!origin) return callback(null, true);
-    
-    // Allow specific origins
+
+    // Allow only whitelisted origins in development
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
-    
-    // For production, be more permissive for mobile apps
+
+    // In production allow mobile apps by default; otherwise reject
     if (process.env.NODE_ENV === 'production') {
-      return callback(null, true); // Allow all origins for mobile apps
+      return callback(null, true);
     }
-    
+
     callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
@@ -39,17 +40,17 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Logging middleware
+// HTTP request logging (combined format)
 app.use(morgan('combined'));
 
-// Body parsing middleware
+// Parse JSON and URL-encoded bodies with size limits
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Routes
+// Mount API routes under /api
 app.use('/api', routes);
 
-// Root endpoint
+// Simple root health/info endpoint
 app.get('/', (req, res) => {
   res.json({
     message: 'SkeoTrace API',
@@ -58,12 +59,12 @@ app.get('/', (req, res) => {
   });
 });
 
-// 404 handler
+// Fallback 404 handler for any other routes
 app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Error handling middleware
+// Central error handler middleware
 app.use(errorHandler);
 
 export default app;

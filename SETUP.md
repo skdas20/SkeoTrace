@@ -31,7 +31,7 @@ cd backend
 # Create .env file with your MongoDB connection
 echo "PORT=5000
 NODE_ENV=development
-MONGODB_URI=mongodb+srv://Sumit:okenopei123@cluster0.ebs6g.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/organic_traceability
 DB_NAME=organic_traceability
 JWT_SECRET=your_super_secret_jwt_key_change_in_production
 JWT_EXPIRE=7d

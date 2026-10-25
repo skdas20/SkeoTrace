@@ -1,308 +1,151 @@
-# SkeoTrace - Transparent Farm-to-Fork Traceability
+<div align="center">
 
-A comprehensive food traceability system that ensures transparency, authenticity, and trust throughout the entire supply chain from farm to consumer.
+# 🌱 SkeoTrace
 
-## 🌱 Overview
+**Farm-to-fork food traceability with a tamper-evident ledger and QR codes.**
 
-SkeoTrace leverages blockchain technology to create an immutable record of food products' journey through the supply chain, enabling consumers to verify the authenticity and origin of their food with a simple QR code scan.
+Producers record every step of a batch's journey, retailers receive and sell it, and consumers scan a QR code to see where their food came from and verify that the record hasn't been altered.
 
-## ✨ Features
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://react.dev)
+[![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=white)](https://expressjs.com)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com)
+[![Live demo](https://img.shields.io/badge/demo-live-brightgreen)](https://skeo-trace.vercel.app/)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-### Core Functionality
-- **🔗 Blockchain Integration**: Immutable supply chain event logging
-- **📱 QR Code System**: Easy product verification for consumers
-- **📋 Certificate Management**: Digital organic certification handling
-- **👥 Multi-Role Support**: Producers, Retailers, Consumers, Admins
-- **📊 Real-time Tracking**: Live batch status updates across the supply chain
+[Live demo](https://skeo-trace.vercel.app/) · [Quick start](#quick-start) · [How it works](#how-it-works) · [API](#api) · [Roadmap](#roadmap) · [Contributing](#contributing)
 
-## 🌐 Live Demo
-
-- **Frontend**: https://skeo-trace.vercel.app/
-- **Backend API**: https://skeotrace-backend.onrender.com
-- **API Health**: https://skeotrace-backend.onrender.com/api/health
-
-### Demo Credentials
-- **Producer**: `producer@demo.com` / `password123`
-- **Retailer**: `retailer@demo.com` / `password123`
-- **Consumer**: `consumer@demo.com` / `password123`
-- **Admin**: `admin@demo.com` / `password123`
-
-### Key Benefits
-- **🛡️ Trust & Transparency**: Immutable blockchain records
-- **⚡ Real-time Verification**: Instant QR code scanning
-- **📜 Automated Compliance**: Streamlined regulatory documentation
-- **🎯 Supply Chain Efficiency**: Reduced paperwork and errors
-- **💰 Premium Pricing**: Verified organic authentication
-
-## 🏗️ Architecture
-
-```
-Frontend (React.js) → Backend (Node.js/Express) → Database (MongoDB)
-                                ↓
-                         Blockchain Service
-                    (Hyperledger Fabric/Mock)
-```
-
-## 🚀 Technology Stack
-
-### Frontend
-- **React.js** - Modern UI framework
-- **Material-UI** - Professional component library
-- **React Router** - Navigation and routing
-- **Axios** - API communication
-- **QR Code Libraries** - QR generation and scanning
-
-### Backend  
-- **Node.js** - Runtime environment
-- **Express.js** - Web framework
-- **MongoDB** - Database
-- **JWT** - Authentication
-- **Multer** - File uploads
-- **QRCode** - QR generation
-
-### Blockchain
-- **Mock Blockchain Service** (Development)
-- **Hyperledger Fabric** (Production-ready)
-- **Cryptographic Hashing** - Data integrity
-
-## 📦 Installation & Setup
-
-### Prerequisites
-- Node.js (v16 or higher)
-- MongoDB (Atlas or local)
-- Git
-
-### 1. Clone Repository
-```bash
-git clone <repository-url>
-cd Organic
-```
-
-### 2. Install Dependencies
-```bash
-# Install all dependencies
-npm run install-all
-
-# Or install separately:
-npm run install-server  # Backend dependencies
-npm run install-client  # Frontend dependencies
-```
-
-### 3. Environment Configuration
-
-Create `.env` file in `/backend`:
-```env
-PORT=5000
-NODE_ENV=development
-
-# Database Configuration
-MONGODB_URI=mongodb+srv://Sumit:okenopei123@cluster0.ebs6g.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-DB_NAME=organic_traceability
-
-# JWT Configuration
-JWT_SECRET=your_jwt_secret_key_here_change_in_production
-JWT_EXPIRE=7d
-
-# Frontend URL
-FRONTEND_URL=http://localhost:3000
-```
-
-### 4. Start Development Servers
-```bash
-# Start both frontend and backend
-npm run dev
-
-# Or start separately:
-npm run server  # Backend only (localhost:5000)
-npm run client  # Frontend only (localhost:3000)
-```
-
-## 👤 User Roles & Access
-
-| Role | Capabilities |
-|------|-------------|
-| **Farmer** | Create batches, request certification, track farm products |
-| **Processor** | Update batch processing, split/merge batches, handle manufacturing |
-| **Certifier** | Upload certificates, approve/reject organic claims, validate compliance |
-| **Distributor** | Track shipments, update logistics, manage warehousing |
-| **Retailer** | Receive products, update inventory, record sales |
-| **Consumer** | Scan QR codes, verify product authenticity, view full traceability |
-| **Admin** | System management, user oversight, analytics and reporting |
-
-## 🔧 Demo Credentials
-
-For testing purposes, use `npm run seed` to create demo users for all roles:
-
-```
-Farmer Account:
-Email: farmer@demo.com
-Password: password123
-
-Processor Account:
-Email: processor@demo.com
-Password: password123
-
-Distributor Account:
-Email: distributor@demo.com
-Password: password123
-
-Retailer Account:
-Email: retailer@demo.com
-Password: password123
-
-Certifier Account:
-Email: certifier@demo.com
-Password: password123
-
-Consumer Account:
-Email: consumer@demo.com
-Password: password123
-
-Admin Account:
-Email: admin@demo.com  
-Password: password123
-```
-
-## 📱 Usage Guide
-
-### For Farmers
-1. **Register** as a farmer with organization details
-2. **Create Batches** for harvested organic products
-3. **Request Certification** from certified authorities
-4. **Generate QR Codes** for product labeling
-5. **Transfer Batches** to processors/distributors
-
-### For Consumers
-1. **Scan QR Code** on organic product packaging
-2. **View Product Journey** from farm to retail
-3. **Verify Certificates** and organic compliance
-4. **Check Freshness** and quality metrics
-5. **Trust the Source** with blockchain verification
-
-### For Supply Chain Partners
-1. **Register** with appropriate role
-2. **Receive/Update Batches** as they move through supply chain
-3. **Upload Documentation** and compliance certificates
-4. **Track Real-time Status** of all products
-5. **Maintain Traceability** records
-
-## 🔐 Security Features
-
-- **JWT Authentication** - Secure user sessions
-- **Role-based Access Control** - Permission management
-- **Data Encryption** - Secure data transmission
-- **Blockchain Immutability** - Tamper-proof records
-- **File Hash Verification** - Document integrity
-- **Input Validation** - XSS and injection protection
-
-## 📊 API Endpoints
-
-### Authentication
-- `POST /api/auth/login` - User login
-- `POST /api/auth/register` - User registration
-- `GET /api/auth/me` - Get current user
-
-### Batch Management
-- `GET /api/batch` - List batches
-- `POST /api/batch` - Create new batch
-- `GET /api/batch/:id` - Get batch details
-- `PUT /api/batch/:id` - Update batch
-- `GET /api/batch/qr/:qrCode` - Get batch by QR code
-
-### QR Code System
-- `POST /api/qr/generate/:batchId` - Generate QR code
-- `GET /api/qr/verify/:qrCode` - Verify QR code (Public)
-
-### Certificates
-- `POST /api/certificate` - Upload certificate
-- `GET /api/certificate` - List certificates
-- `PUT /api/certificate/:id/approve` - Approve certificate
-
-### Blockchain
-- `POST /api/blockchain/record-batch` - Record batch on blockchain
-- `GET /api/blockchain/batch-history/:batchId` - Get blockchain history
-
-## 🎯 UN Sustainable Development Goals
-
-This project supports:
-
-- **SDG 2: Zero Hunger** - Ensuring food safety and reducing fraud
-- **SDG 9: Industry, Innovation, and Infrastructure** - Blockchain technology integration
-- **SDG 12: Responsible Consumption and Production** - Transparent and ethical food choices
-
-## 🚀 Production Deployment
-
-### Environment Variables (Production)
-```env
-NODE_ENV=production
-PORT=5000
-MONGODB_URI=<your-production-mongodb-uri>
-JWT_SECRET=<strong-secret-key>
-FRONTEND_URL=<your-frontend-domain>
-```
-
-### Build for Production
-```bash
-# Build frontend
-npm run build
-
-# Deploy to your preferred hosting service:
-# - Heroku
-# - AWS
-# - Azure
-# - DigitalOcean
-```
-
-## 🔄 Blockchain Integration Options
-
-### Current Implementation
-- **Mock Blockchain Service** - Perfect for development and demonstration
-- **Simulated Transactions** - All blockchain features without complexity
-- **Hash Generation** - Cryptographic verification
-- **Immutable Records** - Tamper-proof event logging
-
-### Production Options
-1. **Hyperledger Fabric** - Enterprise blockchain platform
-2. **Ethereum Private Network** - Smart contracts
-3. **AWS Managed Blockchain** - Cloud-based solution
-4. **IBM Blockchain Platform** - Enterprise-grade service
-
-## 📈 Future Enhancements
-
-- [ ] **Mobile App** (React Native)
-- [ ] **IoT Integration** (Temperature/Humidity sensors)
-- [ ] **AI-powered Analytics** (Predictive quality assessment)
-- [ ] **Multi-language Support** (Internationalization)
-- [ ] **Advanced Reporting** (Business intelligence)
-- [ ] **Smart Contracts** (Automated compliance)
-- [ ] **API Gateway** (Rate limiting, monitoring)
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 👨‍💻 Development Team
-
-**DEVNEST Team**
-- Department: CSE (IoT CS BT)
-- Institution: [Your Institution Name]
-- Project Guides: Prof. Subhabrata Sen Gupta, Dr. Rupayan Das
-
-## 📞 Support
-
-For support and queries:
-- 📧 Email: [your-email@domain.com]
-- 🐛 Issues: [GitHub Issues](link-to-issues)
-- 📖 Documentation: [Project Wiki](link-to-wiki)
+</div>
 
 ---
 
-**🌱 "Ensuring transparency from farm to table with blockchain technology"** 🌱
+## Why
+
+Labels like "organic" and "locally grown" are hard for shoppers to check. SkeoTrace gives every batch of produce a public, verifiable history: who grew it, when it moved, where it was stored and when it was sold. Each event is hash-linked, so any later edit is detectable.
+
+## Features
+
+- **Batch lifecycle:** producers create batches, update them and transfer them; retailers receive, store and sell them.
+- **Tamper-evident ledger:** events are grouped into blocks with a Merkle root, and each block's SHA-256 hash includes the previous block's hash. Admins can verify the whole chain with one request.
+- **QR codes:** every batch gets a QR code that links to its public trace page, so no app or login is needed to scan it.
+- **Role-based dashboards** for producers, retailers, consumers and admins, with JWT authentication and role-based access control on every route.
+- **Audit view:** admins can browse blocks, users and the audit trail.
+
+## Live demo
+
+Try it at **<https://skeo-trace.vercel.app>** (the API runs on a free Render instance and may take about 30 seconds to wake up).
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Producer | `producer@demo.com` | `password123` |
+| Retailer | `retailer@demo.com` | `password123` |
+| Consumer | `consumer@demo.com` | `password123` |
+| Admin | `admin@demo.com` | `password123` |
+
+## How it works
+
+```mermaid
+graph LR;
+    P[Producer] -->|create / update / transfer| API[Express API];
+    R[Retailer] -->|receive / store / sell| API;
+    API --> EV[(Events in MongoDB)];
+    EV --> BC[Ledger service];
+    BC -->|Merkle root + SHA-256 hash chain| BL[(Blocks)];
+    C[Consumer] -->|scan QR| PT[Public trace page];
+    PT -->|GET /trace/:batchId| API;
+    A[Admin] -->|GET /api/admin/blocks/verify| BC;
+```
+
+The ledger (`backend/src/services/blockchain.ts`) is a self-contained hash chain stored in MongoDB: block hash = SHA-256(index + timestamp + previous hash + Merkle root of the block's events). It runs anywhere MongoDB does. Anchoring the chain to a public or permissioned blockchain (such as Hyperledger Fabric) is on the [roadmap](#roadmap).
+
+## Quick start
+
+**Requirements:** Node.js 18+ and MongoDB (local, or a free [Atlas](https://www.mongodb.com/atlas) cluster).
+
+```bash
+git clone https://github.com/skdas20/SkeoTrace.git
+cd SkeoTrace
+npm install            # installs concurrently
+npm run install-all    # backend + frontend dependencies
+```
+
+**Backend:** create `backend/.env` from the example:
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+| Variable | Example | Purpose |
+| --- | --- | --- |
+| `MONGO_URI` | `mongodb://localhost:27017/organic_traceability` | Database connection |
+| `JWT_SECRET` | a long random string | Signs login tokens |
+| `PORT` | `5000` | API port |
+| `FRONTEND_PUBLIC_URL` | `http://localhost:3000` | Base URL encoded in QR codes |
+
+**Frontend:** create `frontend/.env` with `VITE_API_URL=http://localhost:5000`.
+
+**Seed demo users and run:**
+
+```bash
+npm run seed                 # creates admin, producer, retailer and consumer accounts
+cd backend && npm run dev    # API on http://localhost:5000
+cd frontend && npm run dev   # web app on http://localhost:3000 (in a second terminal)
+```
+
+Seeded local accounts:
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Admin | `admin@trace.local` | `Admin@123` |
+| Producer | `prod@trace.local` | `Prod@123` |
+| Retailer | `shop@trace.local` | `Retail@123` |
+| Consumer | `cons@trace.local` | `Cons@123` |
+
+## API
+
+All routes are mounted under `/api`. Authenticated routes need `Authorization: Bearer <token>` from `POST /api/auth/login`.
+
+| Area | Endpoints |
+| --- | --- |
+| Auth | `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/profile` |
+| Producer | `POST /api/producer/batches`, `PATCH /api/producer/batches/:id`, `POST /api/producer/batches/:id/transfer`, `GET /api/producer/batches` |
+| Retailer | `POST /api/retailer/batches/:id/receive`, `…/store`, `…/sell`, `GET /api/retailer/batches`, `GET /api/retailer/batches/search` |
+| Public | `GET /api/public/trace/:batchId`, `GET /api/public/qrcode/:batchId` |
+| Admin | `GET /api/admin/users`, `GET /api/admin/blocks`, `GET /api/admin/blocks/verify`, `GET /api/admin/audit` |
+| Health | `GET /api/health` |
+
+See `backend/src/routes/` for request bodies and the exact mount prefixes.
+
+## Project structure
+
+```
+backend/     Express + TypeScript API
+  src/models/      Batch, Event, Block, User (Mongoose)
+  src/routes/      auth, producer, retailer, public, admin
+  src/services/    batch logic and the hash-chain ledger
+  src/utils/       SHA-256, Merkle tree, QR code helpers
+  scripts/seed.ts  demo users
+frontend/    React + Vite + Tailwind web app (dashboards, public trace page)
+data/        Feasibility report, software requirements and design documents (PDF)
+```
+
+## Roadmap
+
+- [ ] Anchor block hashes to a public chain or Hyperledger Fabric
+- [ ] Certifier role: upload and verify organic certificates
+- [ ] Distributor and processor roles: split and merge batches, shipping events
+- [ ] Mobile-friendly QR scanner page with camera support
+- [ ] Automated tests for the ledger and the batch lifecycle, plus CI
+- [ ] Docker Compose setup (API, web app and MongoDB)
+- [ ] Internationalisation for farmers and consumers in different regions
+
+## Contributing
+
+Backend, frontend, documentation and supply-chain domain knowledge are all welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) and look for issues labelled [`good first issue`](https://github.com/skdas20/SkeoTrace/labels/good%20first%20issue).
+
+If you like the project, **a ⭐ helps others find it**.
+
+## License
+
+[MIT](LICENSE) © Sumit Kumar Das

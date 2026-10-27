@@ -1,5 +1,3 @@
-require('ts-node/register');
-
 const { BlockchainService } = require('../src/services/blockchain');
 const { Block } = require('../src/models/Block');
 const { Event } = require('../src/models/Event');

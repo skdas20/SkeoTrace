@@ -1,5 +1,3 @@
-require('ts-node/register');
-
 const { calculateMerkleRoot } = require('../src/utils/merkle');
 
 describe('calculateMerkleRoot', () => {

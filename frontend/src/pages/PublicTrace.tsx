@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { Package, Copy, ExternalLink, CheckCircle, XCircle } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -9,6 +10,7 @@ import { api, TraceResponse } from '../lib/api';
 
 export const PublicTrace: React.FC = () => {
   const { batchId } = useParams<{ batchId: string }>();
+  const { t, i18n } = useTranslation('publicTrace');
   const [traceData, setTraceData] = useState<TraceResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -27,7 +29,7 @@ export const PublicTrace: React.FC = () => {
       const data = await api.trace(id);
       setTraceData(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load trace data');
+      setError(err instanceof Error ? err.message : t('loadFailed'));
     } finally {
       setLoading(false);
     }
@@ -65,7 +67,7 @@ export const PublicTrace: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Package className="h-12 w-12 mx-auto mb-4 text-primary animate-pulse" />
-          <p className="text-muted-foreground">Loading trace information...</p>
+          <p className="text-muted-foreground">{t('loading')}</p>
         </div>
       </div>
     );
@@ -77,14 +79,14 @@ export const PublicTrace: React.FC = () => {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <XCircle className="h-12 w-12 mx-auto mb-4 text-red-500" />
-            <CardTitle>Trace Not Found</CardTitle>
+            <CardTitle>{t('traceNotFound')}</CardTitle>
             <CardDescription>
               {error}
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
             <Button onClick={() => window.location.reload()}>
-              Try Again
+              {t('tryAgain')}
             </Button>
           </CardContent>
         </Card>
@@ -101,13 +103,28 @@ export const PublicTrace: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
       <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-end gap-2 mb-4">
+          <label htmlFor="trace-language" className="text-sm font-medium text-muted-foreground">
+            {t('language')}
+          </label>
+          <select
+            id="trace-language"
+            aria-label={t('language')}
+            value={i18n.resolvedLanguage?.startsWith('hi') ? 'hi' : 'en'}
+            onChange={(event) => { void i18n.changeLanguage(event.target.value); }}
+            className="rounded-md border bg-background px-3 py-2 text-sm"
+          >
+            <option value="en">{t('english')}</option>
+            <option value="hi">{t('hindi')}</option>
+          </select>
+        </div>
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
             <Package className="h-12 w-12 text-primary" />
           </div>
-          <h1 className="text-3xl font-bold mb-2">SkeoTrace Food Journey</h1>
-          <p className="text-muted-foreground">Complete farm-to-table traceability</p>
+          <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
+          <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
 
         <div className="grid gap-6 max-w-4xl mx-auto">
@@ -118,48 +135,54 @@ export const PublicTrace: React.FC = () => {
                 <div>
                   <CardTitle className="flex items-center space-x-2">
                     <Package className="h-5 w-5" />
-                    <span>Batch Information</span>
+                    <span>{t('batchInformation')}</span>
                   </CardTitle>
-                  <CardDescription>Batch ID: {batch.batchId}</CardDescription>
+                  <CardDescription>{t('batchId')}: {batch.batchId}</CardDescription>
                 </div>
                 <Badge variant={getStatusColor(batch.status) as any} className="text-sm">
-                  {batch.status}
+                  {t(`status.${batch.status}`, { defaultValue: batch.status.replace(/_/g, ' ') })}
                 </Badge>
               </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Product Type</label>
+                  <label className="text-sm font-medium text-muted-foreground">{t('productType')}</label>
                   <p className="text-lg font-medium">{batch.productType}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Origin Farm</label>
+                  <label className="text-sm font-medium text-muted-foreground">{t('originFarm')}</label>
                   <p className="text-lg font-medium">{batch.originFarm}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Harvest Date</label>
+                  <label className="text-sm font-medium text-muted-foreground">{t('harvestDate')}</label>
                   <p className="text-lg font-medium">
-                    {batch.harvestDate ? new Date(batch.harvestDate).toLocaleDateString() : 'Not specified'}
+                    {batch.harvestDate
+                      ? new Date(batch.harvestDate).toLocaleDateString(
+                          i18n.resolvedLanguage === 'hi' ? 'hi-IN' : 'en-US'
+                        )
+                      : t('notSpecified')}
                   </p>
                 </div>
               </div>
 
               {batch.certification && (
                 <div className="mt-6 pt-6 border-t">
-                  <label className="text-sm font-medium text-muted-foreground">Organic Certification</label>
+                  <label className="text-sm font-medium text-muted-foreground">{t('organicCertification')}</label>
                   <div className="mt-2 flex items-center space-x-2">
                     <Badge variant={batch.certification.status === 'APPROVED' ? 'success' : 'secondary'}>
                       {batch.certification.status}
                     </Badge>
                     {batch.certification.signedBy && (
                       <span className="text-sm text-muted-foreground">
-                        Certified by {batch.certification.signedBy}
+                        {t('certifiedBy')} {batch.certification.signedBy}
                       </span>
                     )}
                     {batch.certification.signedAt && (
                       <span className="text-sm text-muted-foreground">
-                        on {new Date(batch.certification.signedAt).toLocaleDateString()}
+                        {t('on')} {new Date(batch.certification.signedAt).toLocaleDateString(
+                          i18n.resolvedLanguage === 'hi' ? 'hi-IN' : 'en-US'
+                        )}
                       </span>
                     )}
                   </div>
@@ -177,23 +200,23 @@ export const PublicTrace: React.FC = () => {
                 ) : (
                   <XCircle className="h-5 w-5 text-red-500" />
                 )}
-                <span>Blockchain Integrity</span>
+                <span>{t('blockchainIntegrity')}</span>
               </CardTitle>
               <CardDescription>
-                Data integrity verification through blockchain technology
+                {t('integrityDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <div>
-                    <p className="text-sm text-muted-foreground">Verification Status</p>
+                    <p className="text-sm text-muted-foreground">{t('verificationStatus')}</p>
                     <p className={`font-medium ${integrity.verified ? 'text-green-700' : 'text-red-700'}`}>
-                      {integrity.verified ? 'Verified' : 'Failed'}
+                      {integrity.verified ? t('verified') : t('failed')}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Blocks</p>
+                    <p className="text-sm text-muted-foreground">{t('blocks')}</p>
                     <p className="font-medium">{integrity.blocks}</p>
                   </div>
                 </div>
@@ -204,9 +227,9 @@ export const PublicTrace: React.FC = () => {
           {/* Timeline */}
           <Card>
             <CardHeader>
-              <CardTitle>Chain of Custody</CardTitle>
+              <CardTitle>{t('chainOfCustody')}</CardTitle>
               <CardDescription>
-                Complete journey of this batch from farm to your table
+                {t('journeyDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -214,7 +237,7 @@ export const PublicTrace: React.FC = () => {
                 <Timeline items={timeline} />
               ) : (
                 <p className="text-muted-foreground text-center py-8">
-                  No events recorded for this batch yet.
+                  {t('noEvents')}
                 </p>
               )}
             </CardContent>
@@ -223,23 +246,23 @@ export const PublicTrace: React.FC = () => {
           {/* Share */}
           <Card>
             <CardHeader>
-              <CardTitle>Share This Trace</CardTitle>
+              <CardTitle>{t('shareTrace')}</CardTitle>
               <CardDescription>
-                Share this traceability information with others
+                {t('shareDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex space-x-3">
                 <Button onClick={copyTraceLink} variant="outline">
                   <Copy className="h-4 w-4 mr-2" />
-                  Copy Link
+                  {t('copyLink')}
                 </Button>
                 <Button
                   onClick={() => window.open(api.getQRCodeUrl(batch.batchId), '_blank')}
                   variant="outline"
                 >
                   <ExternalLink className="h-4 w-4 mr-2" />
-                  View QR Code
+                  {t('viewQr')}
                 </Button>
               </div>
             </CardContent>
